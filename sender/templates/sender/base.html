@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Сервис управления рассылками</title>
+
+    <style>
+
+    .row {
+          margin-left:-5px;
+          margin-right:-5px;
+        }
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      width: 100%;
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 16px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+
+      .topcenter{
+        border: 1px solid;
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        margin: auto;
+        width: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px;
+      }
+
+    </style>
+</head>
+<body>
+
+    {% if user.is_authentificated %}
+    <div class="topcorner">
+        <h4><a href="#">Войти</a>
+        <a href="#">Зарегистрироваться</a></h4>
+    </div>
+
+    {% else %}
+    <div class="topcorner">
+        <h4>{{user.name}} <a href="#">Выйти</a></h4>
+    </div>
+    <div class="topleft">
+        <a href="{% url 'sender:client_list' %}">Мои клиенты</a>
+        <a href="{% url 'sender:group_list' %}">Мои группы</a>
+        <a href="{% url 'sender:massend_list' %}">Мои рассылки</a>
+    </div>
+    {% endif %}
+
+
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

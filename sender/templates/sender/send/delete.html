@@ -1,0 +1,10 @@
+{% extends 'sender/base.html' %}
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    <h4>Вы <strong>действительно</strong> хотите удалить рассылку {{object.name}}?</h4>
+    <button><a href="{% url 'sender:massend_list' %}">Отмена</a></button>
+    <button type="submit">Удалить</button>
+</form>
+{% endblock %}

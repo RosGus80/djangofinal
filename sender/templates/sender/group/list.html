@@ -1,0 +1,10 @@
+{% extends 'sender/base.html' %}
+
+{% block content %}
+  <div class="topcenter">
+    {% for group in groups %}
+        <h4> {{ group.name }} <a href="{% url 'sender:group_delete' group.pk %}">Удалить</a> <a href="{% url 'sender:group_detail' group.pk %}">Посмотреть</a></h4>
+    {% endfor %}
+  </div>
+
+{% endblock %}
