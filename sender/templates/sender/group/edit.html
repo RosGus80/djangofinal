@@ -1,0 +1,42 @@
+{% extends 'sender/base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="column">
+    <table>
+      <caption>Клиенты вне группы</caption>
+      <tr>
+        <th>Имя клиента</th>
+        <th>Почта</th>
+        <th>Перенести</th>
+      </tr>
+
+      {% for client in clients_not_included %}
+      <tr>
+        <td>{{ client.full_name }}</td>
+        <td>{{ client.email }}</td>
+        <td><a href="#">Чето</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="column">
+    <table>
+      <caption>Клиенты в группе</caption>
+      <tr>
+        <th>Имя клиента</th>
+        <th>Почта</th>
+        <th>Перенести</th>
+      </tr>
+      {% for client in clients_included %}
+      <tr>
+        <td>{{ client.full_name }}</td>
+        <td>{{ client.email }}</td>
+        <td><a href="#">Чето</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock %}
