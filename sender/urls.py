@@ -3,7 +3,7 @@ from django.urls import path
 from sender.views import send_email, HomepageView, MassSendCreateView, MassSendDetailView, ClientCreateView, \
     ClientUpdateView, ClientDetailView, ClientDeleteView, ClientListView, MassSendListView, MassSendUpdateView, \
     MassSendDeleteView, ClientGroupEdit, ClientGroupListView, ClientGroupCreateView, ClientGroupDetailView, \
-    ClientGroupUpdateView, ClientGroupDeleteView
+    ClientGroupUpdateView, ClientGroupDeleteView, add_client, remove_client
 
 app_name = 'sender'
 
@@ -30,4 +30,7 @@ urlpatterns = [
     path('groups/group/<int:pk>/update', ClientGroupUpdateView.as_view(), name='group_update'),
     path('groups/group/<int:pk>/delete', ClientGroupDeleteView.as_view(), name='group_delete'),
     path('groups/group/<int:pk>/edit', ClientGroupEdit.as_view(), name='group_edit'),
+    path('add_client/<int:group_id>/<int:client_id>', add_client, name='add_client'),
+    path('remove_client/<int:group_id>/<int:client_id>', remove_client, name='remove_client'),
 ]
+

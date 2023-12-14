@@ -177,6 +177,25 @@ class ClientGroupEdit(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['clients_included'] = self.get_object().clients.all()
-        context['clients_not_included'] = Client.objects.exclude(id__in=context['clients_included'])
+        # Создаю список из всех групп пользователя и исключаю из них те,
+        # которые находятся в кверисете context['clients_included']
+        context['clients_not_included'] = Client.objects.filter(owner=self.request.user).exclude(id__in=context['clients_included'])
         return context
+
+
+# Сервисные вьюшки
+def add_client(request, group_id, client_id):
+    """Функция для добавления клиента в выбранную группу из шаблона edit без видимой смены страницы"""
+    client = Client.objects.get(pk=client_id)
+    group = ClientGroup.objects.get(pk=group_id)
+    group.clients.add(client)
+    return redirect(reverse_lazy('sender:group_edit', kwargs={'pk': group_id}))
+
+
+def remove_client(request, group_id, client_id):
+    """Функция для удаления клиента из выбранной группы из шаблона edit без видимой смены страницы"""
+    client = Client.objects.get(pk=client_id)
+    group = ClientGroup.objects.get(pk=group_id)
+    group.clients.remove(client)
+    return redirect(reverse_lazy('sender:group_edit', kwargs={'pk': group_id}))
 

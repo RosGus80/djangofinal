@@ -7,9 +7,11 @@ from sender.models import MassSend, ClientGroup, Client
 class ClientGroupAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
+
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ('email', 'full_name')
+
 
 @admin.register(MassSend)
 class MassSendAdmin(admin.ModelAdmin):

@@ -15,7 +15,7 @@
       <tr>
         <td>{{ client.full_name }}</td>
         <td>{{ client.email }}</td>
-        <td><a href="#">Чето</a></td>
+        <td><a href="{% url 'sender:add_client' group_id=object.pk client_id=client.pk %}">Добавить клиента</a></td>
       </tr>
       {% endfor %}
     </table>
@@ -32,7 +32,7 @@
       <tr>
         <td>{{ client.full_name }}</td>
         <td>{{ client.email }}</td>
-        <td><a href="#">Чето</a></td>
+        <td><a href="{% url 'sender:remove_client' group_id=object.pk client_id=client.pk %}">Удалить клиента</a></td>
       </tr>
       {% endfor %}
     </table>
