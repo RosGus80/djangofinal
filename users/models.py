@@ -13,6 +13,7 @@ class User(AbstractUser):
     name = models.CharField(max_length=50, verbose_name='Имя пользователя')
 
     is_verified = models.BooleanField(default=False, verbose_name="Подтвержден")
+    is_blocked = models.BooleanField(default=False, verbose_name="Заблокирован")
 
     phone = PhoneNumberField(**NULLABLE, default="", verbose_name='Номер телефона (опционально)')
 

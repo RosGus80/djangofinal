@@ -7,26 +7,22 @@ from django.utils.datetime_safe import datetime
 from django.views.generic import TemplateView, CreateView, DetailView, UpdateView, DeleteView
 from datetime import timedelta
 
-from sender.forms import MassSendForm, ClientForm, ClientGroupForm
+from sender.forms import MassSendForm, ClientForm, ClientGroupForm, MassendManagerForm
 from sender.models import MassSend, ClientGroup, Client
+from users.models import User
 
 
 # Create your views here.
 
 
-def send_email(context):
-    send_mail(
-        "Subject here",
-        "Here is the message.",
-        'noreply@gmail.com',
-        ["rosgus80@gmail.com"],
-        fail_silently=False,
-    )
-    return redirect(reverse_lazy('sender:home'))
-
-
 class HomepageView(TemplateView):
     template_name = 'sender/base.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['is_manager'] = True if self.request.user.groups.filter(name='Manager').exists() else False
+        return context
 
 
 # Вьюшки для рассылок
@@ -75,7 +71,7 @@ class MassSendDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     template_name = 'sender/send/detail.html'
 
     def test_func(self):
-        if self.object.owner == self.request.user:
+        if self.get_object().owner == self.request.user or self.request.user.groups.filter(name='Manager').exists():
             return True
         else:
             return False
@@ -92,7 +88,7 @@ class MassSendDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('sender:massend_list')
 
     def test_func(self):
-        if self.object.owner == self.request.user:
+        if self.get_object().owner == self.request.user:
             return True
         else:
             return False
@@ -128,7 +124,7 @@ class ClientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     success_url = reverse_lazy('sender:client_list')
 
     def test_func(self):
-        if self.object.owner == self.request.user:
+        if self.get_object().owner == self.request.user:
             return True
         else:
             return False
@@ -139,7 +135,7 @@ class ClientDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     template_name = 'sender/client/detail.html'
 
     def test_func(self):
-        if self.object.owner == self.request.user:
+        if self.get_object().owner == self.request.user:
             return True
         else:
             return False
@@ -151,7 +147,7 @@ class ClientDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('sender:client_list')
 
     def test_func(self):
-        if self.object.owner == self.request.user:
+        if self.get_object().owner == self.request.user:
             return True
         else:
             return False
@@ -187,7 +183,7 @@ class ClientGroupUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView)
     success_url = reverse_lazy('sender:group_list')
 
     def test_func(self):
-        if self.object.owner == self.request.user:
+        if self.get_object().owner == self.request.user:
             return True
         else:
             return False
@@ -198,7 +194,7 @@ class ClientGroupDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView)
     template_name = 'sender/group/detail.html'
 
     def test_func(self):
-        if self.object.owner == self.request.user:
+        if self.get_object().owner == self.request.user:
             return True
         else:
             return False
@@ -210,7 +206,7 @@ class ClientGroupDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView)
     success_url = reverse_lazy('sender:group_list')
 
     def test_func(self):
-        if self.object.owner == self.request.user:
+        if self.get_object().owner == self.request.user:
             return True
         else:
             return False
@@ -245,22 +241,74 @@ class ClientGroupEdit(LoginRequiredMixin, UserPassesTestMixin, DetailView):
 
 
 # Сервисные вьюшки
-@user_passes_test
 def add_client(request, group_id, client_id):
     """Функция для добавления клиента в выбранную группу из шаблона edit без видимой смены страницы"""
     client = Client.objects.get(pk=client_id)
     group = ClientGroup.objects.get(pk=group_id)
-    user_passes_test(client.owner == request.user and group.owner == request.user)
+    # user_passes_test(client.owner == request.user and group.owner == request.user)
     group.clients.add(client)
     return redirect(reverse_lazy('sender:group_edit', kwargs={'pk': group_id}))
 
 
-@user_passes_test
 def remove_client(request, group_id, client_id):
     """Функция для удаления клиента из выбранной группы из шаблона edit без видимой смены страницы"""
     client = Client.objects.get(pk=client_id)
     group = ClientGroup.objects.get(pk=group_id)
-    user_passes_test(client.owner == request.user and group.owner == request.user)
+    # user_passes_test(client.owner == request.user and group.owner == request.user)
     group.clients.remove(client)
     return redirect(reverse_lazy('sender:group_edit', kwargs={'pk': group_id}))
 
+# Менеджер
+
+
+class MassendManagerView(UpdateView, UserPassesTestMixin):
+    model = MassSend
+    form_class = MassendManagerForm
+    template_name = 'sender/manager/massend_update.html'
+    success_url = reverse_lazy('sender:massends_manager')
+
+    def test_func(self):
+        if self.request.user.groups.filter(name='Manager').exists():
+            return True
+        else:
+            return False
+
+
+def block_send(request, pk):
+    if request.user.groups.filter(name='Manager').exists():
+        send = MassSend.objects.get(pk=pk)
+        send.banned = True
+        send.save()
+    return redirect(reverse_lazy('sender:manager'))
+
+
+class ManagerUsersView(UserPassesTestMixin, TemplateView):
+    template_name = 'sender/manager/users.html'
+
+    def test_func(self):
+        if self.request.user.groups.filter(name='Manager').exists():
+            return True
+        else:
+            return False
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_manager'] = True if self.request.user.groups.filter(name='Manager').exists() else False
+        context['users'] = User.objects.all()
+        return context
+
+
+class ManagerMassendsView(UserPassesTestMixin, TemplateView):
+    template_name = 'sender/manager/massends.html'
+
+    def test_func(self):
+        if self.request.user.groups.filter(name='Manager').exists():
+            return True
+        else:
+            return False
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_manager'] = True if self.request.user.groups.filter(name='Manager').exists() else False
+        context['massends'] = MassSend.objects.all()
+        return context

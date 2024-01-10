@@ -1,6 +1,7 @@
 {% extends 'sender/base.html' %}
 
 {% block content %}
+    <h3><a href="{% url 'sender:client_create' %}">Создать клиента</a></h3>
   <div class="topcenter">
     {% for client in clients %}
         <h4> {{ client.email }} <a href="{% url 'sender:client_delete' client.pk %}">Удалить</a> <a href="{% url 'sender:client_detail' client.pk %}">Посмотреть</a></h4>

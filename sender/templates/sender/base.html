@@ -27,7 +27,7 @@
           border-collapse: collapse;
           border-spacing: 0;
           width: 100%;
-          border: 1px solid #ddd;
+          border: 1px solid #CC7722;
         }
 
     th, td {
@@ -36,7 +36,7 @@
         }
 
     tr:nth-child(even) {
-        background-color: #f2f2f2;
+        background-color: #CC7722;
         }
 
     a:hover{
@@ -45,7 +45,7 @@
     }
 
     .base_form {
-    border: 1px dotted;
+    border: 3px dotted;
     border-color:burlywood;
     position: absolute;
     top: 20%;
@@ -54,8 +54,7 @@
     width: 50%;
     transform: translate(-50%, -50%);
     padding: 10px;
-    background-color: violet;
-    color:cyan;
+    color:#CC7722;
 }
     .submit {
         background-color:burlywood;
@@ -82,6 +81,17 @@
         <h4><a href="{% url 'users:login' %}">Войти</a>
         <a href="{% url 'users:register' %}">Зарегистрироваться</a></h4>
     </div>
+    <h1>Войдите или создайте свой аккаунт, чтобы пользоваться функционалом сервиса</h1>
+
+    {% elif is_manager %}
+        <div class="topcorner">
+        <h4>{{user.name}} <a href="{% url 'users:logout' %}">Выйти</a></h4>
+        </div>
+
+         <div class="topleft">
+        <a href="{% url 'sender:massends_manager' %}">Все рассылки</a>
+        <a href="{% url 'sender:users_manager' %}">Все пользователи</a>
+         </div>
 
     {% else %}
     <div class="topcorner">
@@ -97,6 +107,7 @@
 
 
     {% block content %}
+
     {% endblock %}
 
 </body>

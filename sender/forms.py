@@ -11,7 +11,13 @@ class MassSendForm(forms.ModelForm):
 
     class Meta:
         model = MassSend
-        exclude = ('owner', 'end_date')
+        exclude = ('owner', 'end_date', 'banned')
+
+
+class MassendManagerForm(forms.ModelForm):
+    class Meta:
+        model = MassSend
+        fields = ('banned',)
 
 
 class ClientForm(forms.ModelForm):

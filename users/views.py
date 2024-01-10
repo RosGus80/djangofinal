@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -31,9 +33,15 @@ class RegisterView(CreateView):
         return super().form_valid(form)
 
 
-class UserDetailView(DetailView):
+class UserDetailView(DetailView, UserPassesTestMixin):
     model = User
     template_name = 'users/user.html'
+
+    def test_func(self):
+        if self.request.user == self.object:
+            return True
+        else:
+            return False
 
 
 def change_password(request, user_pk):
@@ -66,6 +74,27 @@ def verification(request, verification_code, user_pk):
         return redirect(reverse_lazy(
                 'sender:home')
                 )
+
+
+class UserManagerView(DetailView, UserPassesTestMixin):
+    model = User
+    template_name = 'users/user_manager.html'
+
+    def test_func(self):
+        if self.request.user.groups.filter(name='Manager').exists():
+            return True
+        else:
+            return False
+
+
+def block_user(request, user_pk):
+    if request.user.groups.filter(name='Manager').exists():
+        user = User.objects.get(pk=user_pk)
+        if user.is_blocked:
+            User.objects.filter(pk=user_pk).update(is_blocked=False)
+        else:
+            User.objects.filter(pk=user_pk).update(is_blocked=True)
+    return redirect(reverse_lazy('sender:users_manager'))
 
 
 

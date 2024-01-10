@@ -4,5 +4,10 @@
 </head>
 
 {% block content %}
-    {{object.name}}
+    {% if object.banned %}
+        <h2>Рассылка {{object.subject}} заблокирована модераторами сайта!</h2>
+    {% endif %}
+    <h2>{{object.name}}</h2>
+    <h2>{{object.subject}}</h2>
+    <h2>{{object.text}}</h2>
 {% endblock %}

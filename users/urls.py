@@ -1,7 +1,8 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
-from users.views import RegisterView, verification, CheckEmail, UserDetailView, change_password
+from users.views import RegisterView, verification, CheckEmail, UserDetailView, change_password, UserManagerView, \
+    block_user
 
 app_name = 'users'
 
@@ -14,4 +15,8 @@ urlpatterns = [
     path('checkemail', CheckEmail.as_view(), name='checkemail'),
     path('user/<int:pk>', UserDetailView.as_view(), name='user'),
     path('user/change_password/<int:user_pk>', change_password, name='change_password'),
+
+    # Менеджер
+    path('user_manager/<int:pk>', UserManagerView.as_view(), name='user_manager'),
+    path('user_manager/<int:user_pk>/block', block_user, name='block_user'),
 ]

@@ -1,0 +1,13 @@
+{% extends 'sender/base.html' %}
+<head>
+    <title>Пользователи</title>
+</head>
+{% block content %}
+    <div class="center">
+    {% for user in users %}
+        <h3>{{user.name}}</h3>
+        <a href="{% url 'users:user_manager' pk=user.pk %}">Подробнее</a>
+    {% endfor %}
+    </div>
+
+{% endblock %}

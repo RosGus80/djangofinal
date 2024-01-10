@@ -1,0 +1,13 @@
+{% extends 'sender/base.html' %}
+<head>
+    <title>Рассылки</title>
+</head>
+{% block content %}
+    <div class="center">
+    {% for send in massends %}
+        <h3>{{send.name}}</h3>
+        <a href="{% url 'sender:massend_manager' pk=send.pk %}">Подробнее</a>
+    {% endfor %}
+    </div>
+
+{% endblock %}

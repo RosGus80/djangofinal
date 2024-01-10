@@ -1,6 +1,7 @@
 {% extends 'sender/base.html' %}
 
 {% block content %}
+    <h3><a href="{% url 'sender:massend_create' %}">Создать рассылку</a></h3>
   <div class="topcenter">
     {% for send in sends %}
         <h4> {{ send.name }} <a href="{% url 'sender:massend_delete' send.pk %}">Удалить</a> <a href="{% url 'sender:massend_detail' send.pk %}">Посмотреть</a></h4>

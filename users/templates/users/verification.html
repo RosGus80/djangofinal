@@ -6,7 +6,9 @@
         <p>
             <h3>Please check your email {{user.email}}</h3>
         </p>
-        <button><a href="{% url 'users:login' %}">Login</a></button>
+        {% if user.is_authenticated %}
+            <button><a href="{% url 'users:login' %}">Login</a></button>
+        {% endif %}
     </div>
 
 {% endblock %}
