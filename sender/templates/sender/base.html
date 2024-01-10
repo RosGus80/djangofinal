@@ -3,60 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <title>Сервис управления рассылками</title>
-
+    <link rel="stylesheet" type='text/css' href="/static/css/styles.css">
     <style>
 
-    .row {
-          margin-left:-5px;
-          margin-right:-5px;
-        }
-    .row::after {
-      content: "";
-      clear: both;
-      display: table;
+    body{
+        color: white;
+        height: 100vh;
+        width: 100hv;
+        background-image: linear-gradient(lightblue, darkblue);
     }
+            .row {
+         margin-left:-5px;
+         margin-right:-5px;
+         }
+
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+        }
 
     table {
-      border-collapse: collapse;
-      border-spacing: 0;
-      width: 100%;
-      border: 1px solid #ddd;
-    }
+          border-collapse: collapse;
+          border-spacing: 0;
+          width: 100%;
+          border: 1px solid #ddd;
+        }
 
     th, td {
-      text-align: left;
-      padding: 16px;
-    }
+        text-align: left;
+        padding: 16px;
+        }
 
     tr:nth-child(even) {
         background-color: #f2f2f2;
+        }
+
+    a:hover{
+      background-color: white;
+      color: blue;
     }
 
+    .base_form {
+    border: 1px dotted;
+    border-color:burlywood;
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    margin: center;
+    width: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    background-color: violet;
+    color:cyan;
+}
+    .submit {
+        background-color:burlywood;
+        color:cyan;
+    }
 
-      .topcenter{
-        border: 1px solid;
-        position: absolute;
-        top: 20%;
+    .submit:hover {
+        background-color:white;
+        color:violet;
+    }
+
+    .center{
+        color: white;
+        top: 50%;
         left: 50%;
-        margin: auto;
-        width: 50%;
-        transform: translate(-50%, -50%);
-        padding: 10px;
-      }
+    }
 
     </style>
 </head>
 <body>
 
-    {% if user.is_authentificated %}
+    {% if not user.is_authenticated %}
     <div class="topcorner">
-        <h4><a href="#">Войти</a>
-        <a href="#">Зарегистрироваться</a></h4>
+        <h4><a href="{% url 'users:login' %}">Войти</a>
+        <a href="{% url 'users:register' %}">Зарегистрироваться</a></h4>
     </div>
 
     {% else %}
     <div class="topcorner">
-        <h4>{{user.name}} <a href="#">Выйти</a></h4>
+        <h4>{{user.name}} <a href="{% url 'users:logout' %}">Выйти</a></h4>
     </div>
     <div class="topleft">
         <a href="{% url 'sender:client_list' %}">Мои клиенты</a>

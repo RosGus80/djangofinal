@@ -1,4 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -47,11 +48,17 @@ class MassSendCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MassSendUpdateView(LoginRequiredMixin, UpdateView):
+class MassSendUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = MassSend
     form_class = MassSendForm
     template_name = 'sender/send/create.html'
     success_url = reverse_lazy('sender:home')
+
+    def test_func(self):
+        if self.object.owner == self.request.user:
+            return True
+        else:
+            return False
 
     def form_valid(self, form):
         """То же самое, что для создания, но без задачи нового значения пользователю в силу ненужности"""
@@ -63,9 +70,15 @@ class MassSendUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class MassSendDetailView(LoginRequiredMixin, DetailView):
+class MassSendDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = MassSend
     template_name = 'sender/send/detail.html'
+
+    def test_func(self):
+        if self.object.owner == self.request.user:
+            return True
+        else:
+            return False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -73,10 +86,16 @@ class MassSendDetailView(LoginRequiredMixin, DetailView):
         return context
 
 
-class MassSendDeleteView(DeleteView):
+class MassSendDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = MassSend
     template_name = 'sender/send/delete.html'
     success_url = reverse_lazy('sender:massend_list')
+
+    def test_func(self):
+        if self.object.owner == self.request.user:
+            return True
+        else:
+            return False
 
 
 class MassSendListView(LoginRequiredMixin, TemplateView):
@@ -89,7 +108,7 @@ class MassSendListView(LoginRequiredMixin, TemplateView):
 
 
 # Вьюшки для клиентов
-class ClientCreateView(CreateView):
+class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     template_name = 'sender/client/create.html'
     form_class = ClientForm
@@ -102,22 +121,40 @@ class ClientCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ClientUpdateView(UpdateView):
+class ClientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Client
     template_name = 'sender/client/create.html'
     form_class = ClientForm
     success_url = reverse_lazy('sender:client_list')
 
+    def test_func(self):
+        if self.object.owner == self.request.user:
+            return True
+        else:
+            return False
 
-class ClientDetailView(DetailView):
+
+class ClientDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = Client
     template_name = 'sender/client/detail.html'
 
+    def test_func(self):
+        if self.object.owner == self.request.user:
+            return True
+        else:
+            return False
 
-class ClientDeleteView(DeleteView):
+
+class ClientDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Client
     template_name = 'sender/client/delete.html'
     success_url = reverse_lazy('sender:client_list')
+
+    def test_func(self):
+        if self.object.owner == self.request.user:
+            return True
+        else:
+            return False
 
 
 class ClientListView(LoginRequiredMixin, TemplateView):
@@ -130,7 +167,7 @@ class ClientListView(LoginRequiredMixin, TemplateView):
 
 
 # Вьюшки для групп
-class ClientGroupCreateView(CreateView):
+class ClientGroupCreateView(LoginRequiredMixin, CreateView):
     model = ClientGroup
     template_name = 'sender/group/create.html'
     form_class = ClientGroupForm
@@ -143,22 +180,40 @@ class ClientGroupCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ClientGroupUpdateView(UpdateView):
+class ClientGroupUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ClientGroup
     template_name = 'sender/group/create.html'
     form_class = ClientGroupForm
     success_url = reverse_lazy('sender:group_list')
 
+    def test_func(self):
+        if self.object.owner == self.request.user:
+            return True
+        else:
+            return False
 
-class ClientGroupDetailView(DetailView):
+
+class ClientGroupDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = ClientGroup
     template_name = 'sender/group/detail.html'
 
+    def test_func(self):
+        if self.object.owner == self.request.user:
+            return True
+        else:
+            return False
 
-class ClientGroupDeleteView(DeleteView):
+
+class ClientGroupDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = ClientGroup
     template_name = 'sender/group/delete.html'
     success_url = reverse_lazy('sender:group_list')
+
+    def test_func(self):
+        if self.object.owner == self.request.user:
+            return True
+        else:
+            return False
 
 
 class ClientGroupListView(LoginRequiredMixin, TemplateView):
@@ -170,9 +225,15 @@ class ClientGroupListView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class ClientGroupEdit(LoginRequiredMixin, DetailView):
+class ClientGroupEdit(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = ClientGroup
     template_name = 'sender/group/edit.html'
+
+    def test_func(self):
+        if self.get_object().owner == self.request.user:
+            return True
+        else:
+            return False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -184,18 +245,22 @@ class ClientGroupEdit(LoginRequiredMixin, DetailView):
 
 
 # Сервисные вьюшки
+@user_passes_test
 def add_client(request, group_id, client_id):
     """Функция для добавления клиента в выбранную группу из шаблона edit без видимой смены страницы"""
     client = Client.objects.get(pk=client_id)
     group = ClientGroup.objects.get(pk=group_id)
+    user_passes_test(client.owner == request.user and group.owner == request.user)
     group.clients.add(client)
     return redirect(reverse_lazy('sender:group_edit', kwargs={'pk': group_id}))
 
 
+@user_passes_test
 def remove_client(request, group_id, client_id):
     """Функция для удаления клиента из выбранной группы из шаблона edit без видимой смены страницы"""
     client = Client.objects.get(pk=client_id)
     group = ClientGroup.objects.get(pk=group_id)
+    user_passes_test(client.owner == request.user and group.owner == request.user)
     group.clients.remove(client)
     return redirect(reverse_lazy('sender:group_edit', kwargs={'pk': group_id}))
 

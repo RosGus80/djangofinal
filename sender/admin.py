@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from sender.models import MassSend, ClientGroup, Client
+from sender.models import MassSend, ClientGroup, Client, Log
 
 
 @admin.register(ClientGroup)
@@ -16,3 +16,8 @@ class ClientAdmin(admin.ModelAdmin):
 @admin.register(MassSend)
 class MassSendAdmin(admin.ModelAdmin):
     list_display = ('name', 'subject')
+
+
+@admin.register(Log)
+class LogAdmin(admin.ModelAdmin):
+    list_display = ('date', 'is_sent', 'server_response')

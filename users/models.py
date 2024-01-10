@@ -9,12 +9,14 @@ NULLABLE = {'null': True, 'blank': True}
 # Create your models here.
 class User(AbstractUser):
     username = None
-    email = models.EmailField(unique=True, verbose_name='mail')
-    name = models.CharField(verbose_name='username')
+    email = models.EmailField(unique=True, verbose_name='Почта')
+    name = models.CharField(max_length=50, verbose_name='Имя пользователя')
 
-    verified = False
+    is_verified = models.BooleanField(default=False, verbose_name="Подтвержден")
 
-    phone = PhoneNumberField(**NULLABLE, verbose_name='phone number')
+    phone = PhoneNumberField(**NULLABLE, default="", verbose_name='Номер телефона (опционально)')
+
+    verification_code = models.CharField(max_length=10, default="", verbose_name='Код подтверждения')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

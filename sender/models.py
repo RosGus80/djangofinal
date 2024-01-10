@@ -10,7 +10,7 @@ NULLABLE = {'null': True, 'blank': True}
 class Client(models.Model):
     email = models.EmailField(verbose_name='Почта')
     description = models.TextField(**NULLABLE, verbose_name='Комментарий')
-    full_name = models.CharField(default='', verbose_name='Имя')
+    full_name = models.CharField(max_length=50, default='', verbose_name='Имя')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=None, verbose_name='Пользователь')
 
 
@@ -23,13 +23,23 @@ class ClientGroup(models.Model):
 
 class MassSend(models.Model):
 
+    CHOICES = [
+        ('1', 'Every day'),
+        ('7', 'Every week'),
+        ('30', 'Every month')
+    ]
+
     name = models.CharField(default='', max_length=150, verbose_name='Название рассылки')
+
+    is_active = models.BooleanField(default=False, verbose_name='Активна')
 
     subject = models.CharField(max_length=70, verbose_name='Тема письма')
     body = models.TextField(verbose_name='Содержание письма')
 
     start_date = models.DateField(verbose_name='Дата рассылки')
     end_date = models.DateField(verbose_name='Последняя дата попытки')
+
+    periodicity = models.CharField(max_length=300, choices=CHOICES, default='')
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=None, verbose_name='Пользователь')
     group = models.ForeignKey(ClientGroup, on_delete=models.CASCADE, default=None, verbose_name='Группа рассылки')
