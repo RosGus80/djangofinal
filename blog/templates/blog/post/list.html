@@ -1,0 +1,15 @@
+{% extends 'sender/base.html' %}
+
+{% block content %}
+{% if is_content_manager %}
+<div class="midleft">
+      <h2><a href="{% url 'blog:post_create' %}">Написать пост</a></h2>
+</div>
+{% endif %}
+<div class="center">
+    {% for object in objects %}
+        <h4> {{ object.title }} <a href="{% url 'blog:post_detail' object.pk %}">Посмотреть</a></h4>
+    {% endfor %}
+</div>
+
+{% endblock %}

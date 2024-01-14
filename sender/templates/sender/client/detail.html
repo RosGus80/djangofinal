@@ -5,5 +5,14 @@
 </head>
 
 {% block content %}
-  {{object.email}}
+
+<div class="midleft">
+  <h3><strong>Почта:</strong> {{object.email}}</h3>
+  <h3><strong>Имя:</strong> {{object.full_name}}</h3>
+  <h3><strong>Описание:</strong> {{object.description}}</h3>
+  <a class="btn btn-info" href="{% url 'sender:client_update' object.pk %}">Изменить</a>
+  <a class="btn btn-info" href="{% url 'sender:client_list' %}">Назад</a>
+  <a class="btn btn-danger" href="{% url 'sender:client_delete' object.pk %}">Удалить</a>
+</div>
+
 {% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'sender/base.html' %}
+
+<head>
+    <title>Удаление поста {{object.title}}</title>
+</head>
+
+{% block content %}
+<form class='base_form' method="post">
+    {% csrf_token %}
+    <h4>Вы <strong>действительно</strong> хотите удалить пост {{object.title}}?</h4>
+    <a class="btn btn-success" href="{% url 'blog:blog' %}">Отмена</a>
+    <button type="submit" class="btn btn-warning">Удалить</button>
+</form>
+{% endblock %}

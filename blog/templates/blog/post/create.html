@@ -1,11 +1,11 @@
 {% extends 'sender/base.html' %}
 <head>
-    <title>Создание рассылки</title>
+    <title>Написание поста</title>
 </head>
 {% block content %}
     <form class='base_form' method="post">
         {%csrf_token%}
         {{form.as_p}}
-        <button class="btn btn-success" type="submit">Создать</button>
+        <button class="btn btn-success" type="submit">Готово</button>
     </form>
 {% endblock %}

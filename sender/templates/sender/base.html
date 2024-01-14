@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Сервис управления рассылками</title>
-    <link rel="stylesheet" type='text/css' href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
 
     body{
@@ -39,6 +41,11 @@
         background-color: #CC7722;
         }
 
+    a{
+      color: darkviolet;
+      text-decoration: underline;
+    }
+
     a:hover{
       background-color: white;
       color: blue;
@@ -46,15 +53,17 @@
 
     .base_form {
     border: 3px dotted;
-    border-color:burlywood;
+    border-color:darkviolet;
     position: absolute;
-    top: 20%;
+    top: 50%;
     left: 50%;
     margin: center;
     width: 50%;
     transform: translate(-50%, -50%);
     padding: 10px;
-    color:#CC7722;
+    color:darkviolet;
+    background-color: burlywood;
+    text-shadow: 2px white;
 }
     .submit {
         background-color:burlywood;
@@ -67,11 +76,29 @@
     }
 
     .center{
+        position: absolute;
         color: white;
-        top: 50%;
-        left: 50%;
+        top: 30%;
+        left: 30%;
     }
 
+    .topcorner{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .topleft{
+        position: absolute;
+        top: 20px;
+        left: 10px;
+    }
+
+    .midleft{
+        position: absolute;
+        top: 40px;
+        left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -81,11 +108,13 @@
         <h4><a href="{% url 'users:login' %}">Войти</a>
         <a href="{% url 'users:register' %}">Зарегистрироваться</a></h4>
     </div>
-    <h1>Войдите или создайте свой аккаунт, чтобы пользоваться функционалом сервиса</h1>
+    <div class="topleft">
+        <a href="{% url 'blog:blog' %}">Наш блог</a>
+    </div>
 
     {% elif is_manager %}
         <div class="topcorner">
-        <h4>{{user.name}} <a href="{% url 'users:logout' %}">Выйти</a></h4>
+        <h4><a href="{% url 'users:user' pk=request.user.pk %}">{{user.name}}</a> <a href="{% url 'users:logout' %}">Выйти</a></h4>
         </div>
 
          <div class="topleft">
@@ -98,6 +127,7 @@
         <h4>{{user.name}} <a href="{% url 'users:logout' %}">Выйти</a></h4>
     </div>
     <div class="topleft">
+        <a href="{% url 'blog:blog' %}">Наш блог</a>
         <a href="{% url 'sender:client_list' %}">Мои клиенты</a>
         <a href="{% url 'sender:group_list' %}">Мои группы</a>
         <a href="{% url 'sender:massend_list' %}">Мои рассылки</a>

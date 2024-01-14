@@ -1,9 +1,9 @@
 {% extends 'sender/base.html' %}
 
 {% block content %}
-    <form method="post">
+    <form class="base_form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Подтвердить</button>
+        <button class="btn btn-success"type="submit">Подтвердить</button>
     </form>
 {% endblock %}

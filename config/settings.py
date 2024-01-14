@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     'users',
     'sender',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -114,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
@@ -149,8 +150,9 @@ DEFAULT_FROM_EMAIL = 'Customer Center <noreply@host.com>'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
-
+log_file = os.path.join(BASE_DIR, 'tmp/log.log')
 CRONJOBS = [
-    ('*/1 * * * *', 'sender.cron.my_scheduled_job'),
+    ('*/1 * * * *', 'sender.cron.send', f'>>  {log_file}'),
 ]
+
 

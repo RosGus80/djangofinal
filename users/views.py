@@ -1,7 +1,9 @@
 from django.conf import settings
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, TemplateView
@@ -97,4 +99,7 @@ def block_user(request, user_pk):
     return redirect(reverse_lazy('sender:users_manager'))
 
 
+def log_out(request):
+    logout(request)
+    return redirect(reverse_lazy('sender:home'))
 

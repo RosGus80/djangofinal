@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
@@ -7,6 +9,7 @@ from django.utils.datetime_safe import datetime
 from django.views.generic import TemplateView, CreateView, DetailView, UpdateView, DeleteView
 from datetime import timedelta
 
+from blog.models import Post
 from sender.forms import MassSendForm, ClientForm, ClientGroupForm, MassendManagerForm
 from sender.models import MassSend, ClientGroup, Client
 from users.models import User
@@ -16,12 +19,22 @@ from users.models import User
 
 
 class HomepageView(TemplateView):
-    template_name = 'sender/base.html'
+    template_name = 'sender/homepage.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context['is_manager'] = True if self.request.user.groups.filter(name='Manager').exists() else False
+            context['user_massends_num'] = MassSend.objects.filter(owner=self.request.user).count()
+            context['user_active_massends_num'] = MassSend.objects.filter(owner=self.request.user, is_active=True).count()
+            context['unique_clients_num'] = Client.objects.filter(owner=self.request.user).distinct().count()
+
+        posts = list(Post.objects.all())
+        if len(posts) >= 3:
+            context['random_posts'] = random.sample(posts, 3)
+        else:
+            context['random_posts'] = random.sample(posts, len(posts))
+
         return context
 
 
@@ -47,7 +60,7 @@ class MassSendCreateView(LoginRequiredMixin, CreateView):
 class MassSendUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = MassSend
     form_class = MassSendForm
-    template_name = 'sender/send/create.html'
+    template_name = 'sender/send/update.html'
     success_url = reverse_lazy('sender:home')
 
     def test_func(self):
@@ -119,7 +132,7 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
 
 class ClientUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Client
-    template_name = 'sender/client/create.html'
+    template_name = 'sender/client/update.html'
     form_class = ClientForm
     success_url = reverse_lazy('sender:client_list')
 
@@ -178,7 +191,7 @@ class ClientGroupCreateView(LoginRequiredMixin, CreateView):
 
 class ClientGroupUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = ClientGroup
-    template_name = 'sender/group/create.html'
+    template_name = 'sender/group/update.html'
     form_class = ClientGroupForm
     success_url = reverse_lazy('sender:group_list')
 

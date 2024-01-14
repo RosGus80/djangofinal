@@ -4,10 +4,17 @@
 </head>
 
 {% block content %}
+<div class="midleft">
     {% if object.banned %}
         <h2>Рассылка {{object.subject}} заблокирована модераторами сайта!</h2>
     {% endif %}
-    <h2>{{object.name}}</h2>
-    <h2>{{object.subject}}</h2>
-    <h2>{{object.text}}</h2>
+    <h2><strong>Название:</strong> {{object.name}}</h2>
+    <h2><strong>Заголовок письма:</strong> {{object.subject}}</h2>
+    <h2><strong>Содержание письма:</strong> {{object.text}}</h2>
+    <h2><strong>Дата следующей рассылки:</strong> {{object.start_date}}</h2>
+    <h2><strong>Название группы:</strong> {{object.group.name}}</h2>
+    <a class="btn btn-info" href="{% url 'sender:client_update' object.pk %}">Изменить</a>
+    <a class="btn btn-info" href="{% url 'sender:client_list' %}">Назад</a>
+    <a class="btn btn-danger" href="{% url 'sender:client_delete' object.pk %}">Удалить</a>
+</div>
 {% endblock %}

@@ -4,10 +4,10 @@
 
     <div class="center">
 
-        <h2>{{object.name}}</h2>
-        <h3>Почта: {{object.email}}</h3>
-        <h4>Верифицирован: {{object.is_verified}}</h4>
-        <a href="{% url 'users:change_password' user_pk=object.pk %}">Сменить пароль</a>
+        <h2><strong>Имя пользователя:</strong> {{object.name}}</h2>
+        <h3><strong>Почта:</strong> {{object.email}}</h3>
+        <h4><strong>Верифицирован:</strong> {{object.is_verified}}</h4>
+        <a class="btn btn-info" href="{% url 'users:change_password' user_pk=object.pk %}">Сменить пароль</a>
 
     </div>
 

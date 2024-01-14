@@ -5,10 +5,12 @@
 </head>
 
 {% block content %}
+<div class="center">
 <form method="post">
     {% csrf_token %}
     <h4>Вы <strong>действительно</strong> хотите удалить клиента {{object.email}}?</h4>
-    <button><a href="{% url 'sender:client_list' %}">Отмена</a></button>
-    <button type="submit">Удалить</button>
+    <a class="btn btn-success" href="{% url 'sender:client_list' %}">Отмена</a>
+    <button type="submit" class="btn btn-warning">Удалить</button>
 </form>
+</div>
 {% endblock %}

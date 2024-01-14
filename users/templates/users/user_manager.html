@@ -9,9 +9,9 @@
         <h4>Верифицирован: {{object.is_verified}}</h4>
         <h4>Заблокирован: {{object.is_blocked}}</h4>
         {% if object.is_blocked %}
-        <a href="{% url 'users:block_user' user_pk=object.pk %}">Разблокировать</a>
+        <a class="btn btn-success" href="{% url 'users:block_user' user_pk=object.pk %}">Разблокировать</a>
         {% else %}
-        <a href="{% url 'users:block_user' user_pk=object.pk %}">Заблокировать</a>
+        <a class="btn btn-danger" href="{% url 'users:block_user' user_pk=object.pk %}">Заблокировать</a>
         {% endif %}
 
     </div>

@@ -1,0 +1,17 @@
+{% extends 'sender/base.html' %}
+
+{% block content %}
+<div class="midleft">
+    <h1>{{object.title}}</h1>
+    <h3>{{object.text}}</h3>
+    <h4><strong>Просмотров:</strong> {{object.views}}</h4>
+    <h4><strong>Опубликовано:</strong> {{object.date}}</h4>
+
+    <a class="btn btn-info" href="{% url 'blog:blog' %}">Назад</a>
+    {% if is_content_manager %}
+        <a class="btn btn-info" href="{% url 'blog:post_update' object.pk %}">Изменить</a>
+        <a class="btn btn-danger" href="{% url 'blog:post_delete' object.pk %}">Удалить</a>
+    {% endif %}
+
+</div>
+{% endblock %}

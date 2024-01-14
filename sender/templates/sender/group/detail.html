@@ -5,5 +5,10 @@
 </head>
 
 {% block content %}
-  {{object.name}}
+<div class="midleft">
+  <h3><strong>Название:</strong> {{object.name}}</h3>
+  <a class="btn btn-info" href="{% url 'sender:group_update' object.pk %}">Изменить</a>
+  <a class="btn btn-info" href="{% url 'sender:group_list' %}">Назад</a>
+  <a class="btn btn-danger" href="{% url 'sender:group_delete' object.pk %}">Удалить</a>
+</div>
 {% endblock %}

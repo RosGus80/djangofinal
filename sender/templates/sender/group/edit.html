@@ -1,10 +1,11 @@
 {% extends 'sender/base.html' %}
 
 {% block content %}
+<div class="center">
 <div class="row">
   <div class="column">
     <table>
-      <caption>Клиенты вне группы</caption>
+      <h4>Клиенты вне группы</h4>
       <tr>
         <th>Имя клиента</th>
         <th>Почта</th>
@@ -15,14 +16,14 @@
       <tr>
         <td>{{ client.full_name }}</td>
         <td>{{ client.email }}</td>
-        <td><a href="{% url 'sender:add_client' group_id=object.pk client_id=client.pk %}">Добавить клиента</a></td>
+        <td><a class="btn btn-primary" href="{% url 'sender:add_client' group_id=object.pk client_id=client.pk %}">Добавить клиента</a></td>
       </tr>
       {% endfor %}
     </table>
   </div>
   <div class="column">
     <table>
-      <caption>Клиенты в группе</caption>
+      <h4>Клиенты в группе</h4>
       <tr>
         <th>Имя клиента</th>
         <th>Почта</th>
@@ -32,11 +33,11 @@
       <tr>
         <td>{{ client.full_name }}</td>
         <td>{{ client.email }}</td>
-        <td><a href="{% url 'sender:remove_client' group_id=object.pk client_id=client.pk %}">Удалить клиента</a></td>
+        <td><a class="btn btn-primary"href="{% url 'sender:remove_client' group_id=object.pk client_id=client.pk %}">Удалить клиента</a></td>
       </tr>
       {% endfor %}
     </table>
   </div>
 </div>
-
+</div>
 {% endblock %}

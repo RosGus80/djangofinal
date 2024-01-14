@@ -1,11 +1,12 @@
 {% extends 'sender/base.html' %}
 
 {% block content %}
-
+<div class="midleft">
     <h3><a href="{% url 'sender:group_create' %}">Создать группу</a></h3>
+</div>
   <div class="center">
     {% for group in groups %}
-        <h4> {{ group.name }} <a href="{% url 'sender:group_delete' group.pk %}">Удалить</a> <a href="{% url 'sender:group_edit' group.pk %}">Добавить/убрать клиентов</a></h4>
+        <h4> {{ group.name }} <a href="{% url 'sender:group_detail' group.pk %}">Посмотреть</a> <a href="{% url 'sender:group_delete' group.pk %}">Удалить</a> <a href="{% url 'sender:group_edit' group.pk %}">Добавить/убрать клиентов</a></h4>
     {% endfor %}
   </div>
 
