@@ -8,6 +8,7 @@ class MassSendForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['start_date'].widget = AdminDateWidget(attrs={'type': 'date'})
+        self.fields['periodicity'].widget = forms.RadioSelect(choices=[('1', 'Каждый день'), ('7', 'Каждую неделю'), ('30', 'Каждый месяц')])
 
     class Meta:
         model = MassSend

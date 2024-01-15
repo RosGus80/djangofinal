@@ -2,13 +2,14 @@ import smtplib
 
 from django.core.mail import send_mail
 from django.utils.datetime_safe import datetime
+import datetime as dt
 
 from sender.models import MassSend, Log
 
 
-def write_logs(text):
-    with open('tmp/log.log', 'w') as file:
-        file.write(text+'\n')
+# def write_logs(text):
+#     with open('/tmp/log.log', 'w') as file:
+#         file.write(text+'\n')
 
 
 def send():
@@ -27,25 +28,32 @@ def send():
                             recipient_list=[task.group.clients.all()[i].email],
                             fail_silently=False
                         )
+                        print(task.periodicity)
+                        print(type(task.periodicity))
                     except smtplib.SMTPDataError:
-                        write_logs(f'{datetime.today()} Failed to send email to {task.group.clients.all()[i].email}')
+                        print(f'{datetime.today()} Failed to send email to {task.group.clients.all()[i].email}')
+
+                print(task)
 
                 if task.periodicity == '1':
-                    task.start_date += datetime.timedelta(days=1)
-                    task.end_date = task.start_date + datetime.timedelta(days=1)
-                    task.save(commit=True)
+                    print('1 worked out')
+                    task.start_date = task.start_date + dt.timedelta(days=1)
+                    task.end_date = task.start_date + dt.timedelta(days=1)
+                    task.update()
                 elif task.periodicity == '7':
-                    task.start_date += datetime.timedelta(days=7)
-                    task.end_date = task.start_date + datetime.timedelta(days=1)
-                    task.save(commit=True)
+                    print('7 worked out')
+                    task.start_date = task.start_date + dt.timedelta(days=7)
+                    task.end_date = task.start_date + dt.timedelta(days=1)
+                    task.update()
                 else:
-                    task.start_date += datetime.timedelta(days=30)
-                    task.end_date = task.start_date + datetime.timedelta(days=1)
-                    task.save(commit=True)
+                    print('30 worked out)')
+                    task.start_date = task.start_date + dt.timedelta(days=30)
+                    task.end_date = task.start_date + dt.timedelta(days=1)
+                    task.update()
 
-                write_logs(f'{datetime.today()} {task.name} completed')
+                print(f'{datetime.today()} {task.name} completed')
 
             else:
-                write_logs(f'{datetime.today()} {task.name} skipped')
+                print(f'{datetime.today()} {task.name} skipped')
         else:
-            write_logs(f'{datetime.today()} {task.name} owner is not verified/blocked')
+            print(f'{datetime.today()} {task.name} owner is not verified/blocked')
