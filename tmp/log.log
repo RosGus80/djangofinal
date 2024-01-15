@@ -1,0 +1,21 @@
+
+2024-01-15 22:06:01.634704: Working on "Shouldn't work"
+2024-01-15 22:06:01.634739 "Shouldn't work" owner is not verified/blocked
+
+
+2024-01-15 22:06:01.635512: Working on "Test2"
+2024-01-15 22:06:01.635540: Sending "Test2"
+2024-01-15 22:06:03.013720: Successfully sent Test2 email to rosgus80@yandex.ru
+2024-01-15 22:06:03.017581: Changed "Test2" start date to 2024-01-22
+2024-01-15 22:06:03.017599 "Test2" completed
+2024-01-15 22:06:03.019816 Log object (4) log created
+
+
+2024-01-15 22:06:03.027660: Working on "test"
+2024-01-15 22:06:03.027687: Sending "test"
+2024-01-15 22:06:04.479281: Successfully sent test email to rosgus80@gmail.com
+2024-01-15 22:06:04.480837: Changed "test" start date to 2024-01-16
+2024-01-15 22:06:04.480857 "test" completed
+2024-01-15 22:06:04.482192 Log object (5) log created
+
+

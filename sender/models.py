@@ -51,7 +51,6 @@ class Log(models.Model):
     date = models.DateField(verbose_name='Дата попытки')
 
     is_sent = models.BooleanField(verbose_name='Статус отправки')
-    server_response = models.IntegerField(verbose_name='Ответ сервера')
 
     send = models.ForeignKey(MassSend, on_delete=models.CASCADE, verbose_name='Рассылка')
 

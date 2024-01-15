@@ -20,4 +20,4 @@ class MassSendAdmin(admin.ModelAdmin):
 
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
-    list_display = ('date', 'is_sent', 'server_response')
+    list_display = ('date', 'is_sent',)

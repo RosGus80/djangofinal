@@ -17,6 +17,20 @@ from users.models import User
 
 # Create your views here.
 
+class RequestFormKwargsMixin(object):
+    """
+    CBV mixin which puts the request into the form kwargs.
+    Note: Using this mixin requires you to pop the `request` kwarg
+    out of the dict in the super of your form's `__init__`.
+    """
+
+    def get_form_kwargs(self):
+        kwargs = super(RequestFormKwargsMixin, self).get_form_kwargs()
+
+        # Update the existing form kwargs dict with the request's user.
+        kwargs.update({"request": self.request})
+        return kwargs
+
 
 class HomepageView(TemplateView):
     template_name = 'sender/homepage.html'
@@ -39,7 +53,7 @@ class HomepageView(TemplateView):
 
 
 # Вьюшки для рассылок
-class MassSendCreateView(LoginRequiredMixin, CreateView):
+class MassSendCreateView(LoginRequiredMixin, RequestFormKwargsMixin,CreateView):
     model = MassSend
     form_class = MassSendForm
     template_name = 'sender/send/create.html'
@@ -57,14 +71,14 @@ class MassSendCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MassSendUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class MassSendUpdateView(LoginRequiredMixin, UserPassesTestMixin, RequestFormKwargsMixin, UpdateView):
     model = MassSend
     form_class = MassSendForm
     template_name = 'sender/send/update.html'
     success_url = reverse_lazy('sender:home')
 
     def test_func(self):
-        if self.object.owner == self.request.user:
+        if self.get_object().owner == self.request.user:
             return True
         else:
             return False
