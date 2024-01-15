@@ -15,12 +15,16 @@ from sender.models import MassSend, Log
 def send():
 
     tasks = MassSend.objects.filter(is_active=True, banned=False)
+    print(tasks)
 
     for task in tasks:
+        print(f'{task} not checked')
         if task.owner.is_verified and not task.owner.is_blocked:
+            print(f'{task} checked')
             if task.start_date <= datetime.today().date() <= task.end_date:
                 for i in range(len(task.group.clients.all())+1):
                     try:
+                        print(task.group.clients.all()[i].email)
                         send_mail(
                             subject=task.subject,
                             message=task.body,
