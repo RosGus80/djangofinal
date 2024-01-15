@@ -21,6 +21,9 @@ class ClientGroup(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE, default=None, verbose_name='Пользователь')
 
+    def __str__(self):
+        return f'Группа {self.name}'
+
 
 class MassSend(models.Model):
 
