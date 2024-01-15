@@ -15,45 +15,35 @@ from sender.models import MassSend, Log
 def send():
 
     tasks = MassSend.objects.filter(is_active=True, banned=False)
-    print(tasks)
 
     for task in tasks:
-        print(f'{task} not checked')
         if task.owner.is_verified and not task.owner.is_blocked:
-            print(f'{task} checked')
             if task.start_date <= datetime.today().date() <= task.end_date:
-                for i in range(len(task.group.clients.all())+1):
+                for client in task.group.clients.all():
                     try:
-                        print(task.group.clients.all()[i].email)
                         send_mail(
                             subject=task.subject,
                             message=task.body,
                             from_email='noreply@gmail.com',
-                            recipient_list=[task.group.clients.all()[i].email],
+                            recipient_list=[client.email],
                             fail_silently=False
                         )
-                        print(task.periodicity)
-                        print(type(task.periodicity))
                     except smtplib.SMTPDataError:
                         print(f'{datetime.today()} Failed to send email to {task.group.clients.all()[i].email}')
 
                 print(task)
 
                 if task.periodicity == '1':
-                    print('1 worked out')
-                    task.start_date = task.start_date + dt.timedelta(days=1)
-                    task.end_date = task.start_date + dt.timedelta(days=1)
-                    task.update()
+                    print(MassSend.objects.get(pk=task.pk).start_date)
+                    MassSend.objects.filter(pk=task.pk).update(start_date=task.start_date + dt.timedelta(days=1),
+                                                               end_date=task.end_date + dt.timedelta(days=1))
                 elif task.periodicity == '7':
-                    print('7 worked out')
-                    task.start_date = task.start_date + dt.timedelta(days=7)
-                    task.end_date = task.start_date + dt.timedelta(days=1)
-                    task.update()
+                    MassSend.objects.filter(pk=task.pk).update(start_date=task.start_date + dt.timedelta(days=1),
+                                                               end_date=task.end_date + dt.timedelta(days=1))
                 else:
                     print('30 worked out)')
-                    task.start_date = task.start_date + dt.timedelta(days=30)
-                    task.end_date = task.start_date + dt.timedelta(days=1)
-                    task.update()
+                    MassSend.objects.filter(pk=task.pk).update(start_date=task.start_date + dt.timedelta(days=1),
+                                                               end_date=task.end_date + dt.timedelta(days=1))
 
                 print(f'{datetime.today()} {task.name} completed')
 
