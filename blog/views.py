@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.cache import cache
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, TemplateView, DetailView
@@ -69,7 +70,12 @@ class PostListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['objects'] = Post.objects.all()
+        post_list = cache.get('posts')
+        if post_list is None:
+            post_list = Post.objects.all()
+            cache.set('posts', post_list)
+
+        context['objects'] = post_list
         context['is_content_manager'] = self.request.user.groups.filter(name='content_manager').exists()
         return context
 

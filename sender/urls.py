@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from sender.views import HomepageView, MassSendCreateView, MassSendDetailView, ClientCreateView, \
     ClientUpdateView, ClientDetailView, ClientDeleteView, ClientListView, MassSendListView, MassSendUpdateView, \
@@ -10,7 +11,7 @@ app_name = 'sender'
 
 
 urlpatterns = [
-    path('', HomepageView.as_view(), name='home'),
+    path('', cache_page(60)(HomepageView.as_view()), name='home'),
     # Рассылки
     path('massends', MassSendListView.as_view(), name="massend_list"),
     path('massends/create', MassSendCreateView.as_view(), name='massend_create'),
