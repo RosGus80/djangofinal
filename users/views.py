@@ -98,8 +98,3 @@ def block_user(request, user_pk):
             User.objects.filter(pk=user_pk).update(is_blocked=True)
     return redirect(reverse_lazy('sender:users_manager'))
 
-
-def log_out(request):
-    logout(request)
-    return redirect(reverse_lazy('sender:home'))
-

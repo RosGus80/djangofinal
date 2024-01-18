@@ -19,9 +19,7 @@ from users.models import User
 
 class RequestFormKwargsMixin(object):
     """
-    CBV mixin which puts the request into the form kwargs.
-    Note: Using this mixin requires you to pop the `request` kwarg
-    out of the dict in the super of your form's `__init__`.
+    Миксин для передачи реквеста в формы
     """
 
     def get_form_kwargs(self):

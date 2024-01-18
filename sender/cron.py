@@ -28,12 +28,14 @@ def send():
         print(f'{datetime.today()}: Working on "{task.name}"')
 
         if task.owner.is_verified and not task.owner.is_blocked:
+
             if task.start_date <= datetime.today().date() <= task.end_date:
 
                 print(f'{datetime.today()}: Sending "{task.name}"')
 
                 for client in task.group.clients.all():
                     try:
+                        # Отправка письма
                         send_mail(
                             subject=task.subject,
                             message=task.body,
@@ -43,20 +45,27 @@ def send():
                         )
                         print(f'{datetime.today()}: Successfully sent {task.name} email to {client.email}')
                     except smtplib.SMTPDataError:
+                        # Перехват ошибок с почтовым сервером
                         log_is_sent = False
                         print(f'{datetime.today()}: Failed to send {task.name} email to {client.email}')
 
                 if task.periodicity == '1':
+                    # Периодичность 1 день
+
                     new_start_date = task.start_date + dt.timedelta(days=1)
                     new_end_date = new_start_date + dt.timedelta(days=1)
                     MassSend.objects.filter(pk=task.pk).update(start_date=new_start_date, end_date=new_end_date)
                     print(f'{datetime.today()}: Changed "{task.name}" start date to {new_start_date}')
                 elif task.periodicity == '7':
+                    # Периодичность 7 дней
+
                     new_start_date = task.start_date + dt.timedelta(days=7)
                     new_end_date = new_start_date + dt.timedelta(days=1)
                     MassSend.objects.filter(pk=task.pk).update(start_date=new_start_date, end_date=new_end_date)
                     print(f'{datetime.today()}: Changed "{task.name}" start date to {new_start_date}')
                 else:
+                    # Периодичность 30 дней
+
                     new_start_date = task.start_date + dt.timedelta(days=30)
                     new_end_date = new_start_date + dt.timedelta(days=1)
                     MassSend.objects.filter(pk=task.pk).update(start_date=new_start_date, end_date=new_end_date)
@@ -64,6 +73,7 @@ def send():
 
                 print(f'{datetime.today()} "{task.name}" completed')
                 log_is_sent = True
+                # Создание объекта лога
                 new_log = Log.objects.create(
                     date=log_date,
                     is_sent=log_is_sent,
